@@ -1,0 +1,123 @@
+<html>   
+	<head>   
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />  
+		<link rel="icon" type="image/png"  href="http://iconhandbook.co.uk/favicon.ico">
+  </head>  
+  <body>  
+<form action="/fetch" enctype="multipart/form-data" method="GET" id="form">  
+	<input type="text" name="text" id="text" />
+	<input type="submit" value="Submit text"  />
+</form>
+
+<input type="submit" value="Find local Tweets"  id="location_button" />
+
+<input type="submit" value="Instagram's"  id="instagram" />
+
+<div id="tweets"></div>
+<div id="instagrams"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script >
+	$(function(){
+
+		$("#instagram").on('click', function(){
+			getInstagram();
+		});
+
+
+
+		function getInstagram(){
+			navigator.geolocation.getCurrentPosition(function(position){
+  			lat = position.coords.latitude;
+  			lon = position.coords.longitude;
+	 		
+
+	 		$.ajax({ url: 'https://api.instagram.com/v1/media/search?lat=' +lat +'&lng=' + lon + '&access_token=38313696.8ac3169.2676a0eafcb447d391175e0cfec175e3',
+                   dataType: 'jsonp',
+                   success: function(response){
+                   console.log(response.data);
+                   ig_list = response.data;
+                   console.log(response);
+                   ig_list.map(function(ig){
+ 				   $("#instagrams").append()
+                   })
+                  
+
+				}
+			});
+		})
+	}
+
+		$("#location_button").on('click', function(){
+			get_location();
+		});
+	
+	function get_location() {
+		console.log("geo_location triggered");	
+  		navigator.geolocation.getCurrentPosition(function(position){
+  			geocode = lat + "," + lon + "," + "1mi";
+  			console.log("lat: " + position.coords.latitude);
+  			console.log("lon: " + position.coords.longitude);
+  			console.log(geocode);
+  			https://api.instagram.com/v1/media/search?lat=48.858844&lng=2.294351&access_token=38313696.8ac3169.2676a0eafcb447d391175e0cfec175e3
+			  $( "#tweets" ).html( html );
+			  console.log( "tweets loaded: "+ data.length );
+			});
+		}
+  		
+		//var interval;
+
+		function fetch(term){
+			$.getJSON( "http://localhost:3000/fetch?text=" + term, function( data ) {
+				console.log(data)
+				var html = "";
+				data.map(function(tweet) {
+					html += "<p>"+ tweet.text+ "</p>";
+				})
+			  $( "#tweets" ).html( html );
+			  console.log( "tweets loaded: "+ data.length );
+			});
+		}
+		
+
+
+	/*	function fetchMore(term){
+			$.getJSON( "http://localhost:3000/fetch?text=" + term, function( data ) {
+				console.log(data);
+				if (data.length > 0) {
+					var html = "";
+					data.map(function(tweet) {
+						html += "<p>"+ tweet.text+ "</p>";
+					})
+			  		$( "#tweets" ).prepend( html );
+				}
+
+			  console.log( "tweets loaded: "+data.length );
+			});
+		}
+
+		*/
+
+
+		$("#form").submit(function(e){
+			var i = 1;
+		    e.preventDefault();
+		    var form = this;
+		    var term = $("#text").val();
+		    fetch(term);
+		    
+		    /*
+  			clearInterval(interval);
+		    interval = setInterval(function(){
+		    	console.log(i++);
+		    	fetchMore(term);
+		    }, 10000);
+			*/
+
+		});
+	});
+</script>
+
+ </form>  
+  </body>  
+  </html>
