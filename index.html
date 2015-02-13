@@ -88,7 +88,7 @@ body{
 	background-color: rgb(139, 178, 219);
 	color: rgb(182, 251, 255);
 	margin-bottom: 22px;
-	  outline: none;
+	outline: none;
 
 }
 
@@ -205,10 +205,11 @@ body{
 	 		$.ajax({url:'https://api.instagram.com/v1/media/search?lat=' +lat +'&lng=' + lon + '&access_token=38313696.8ac3169.2676a0eafcb447d391175e0cfec175e3',
                    dataType: 'jsonp',
                    success: function(response){
+                   	console.log(response);
                    instagram_updates = [];        
                    var length = response.data.length;
                    for (i=0;i<length;i++){
-                   		instagram_updates.push('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></div>');
+                   		instagram_updates.push('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><a  target="_blank" href="' + response.data[i].link + '"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></a></div>');
 					if (i === (length-1)){
 						instagram_ready = true;
 						console.log(instagram_ready, instagram_updates);
@@ -228,12 +229,14 @@ body{
 	   			lat = position.coords.latitude;
 	  			lon = position.coords.longitude;	  
 			    geocode = lat + "," + lon + "," + "1mi";
-				$.getJSON("http://localhost:3000/fetch?geocode=" + geocode, function(data) {
-					console.log(data)
+			  // OLD ADRESS: http://localhost:3000/fetch?geocode 
+				$.getJSON("http://fmsocial.herokuapp.com/fetch?geocode=" + geocode, function(data) {
+					console.log("Tweets:");
+					console.log(data);
 					var length = data.length;
 					var html = "";
 					for (var i=0;i<length;i++){
-						twitter_updates.push("<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div'><p class='twitter_text'>" + data[i].text + "</p></div>");
+						twitter_updates.push('<a target="_blank" href="https://twitter.com/' + data[i].user.screen_name +'"><div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div"><p class="twitter_text">'+ data[i].text + '</p></div></a>');
 						if (i === (length-1)){
 							twitter_ready = true;
 							checkIfReady();
