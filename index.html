@@ -11,23 +11,24 @@
 	<link rel="icon" type="image/png"  href="http://iconhandbook.co.uk/favicon.ico">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   	<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
   	<style>
 body{
-
 
   background: -webkit-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);  
   background:    -moz-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);  
   background:     -ms-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%); 
   background:      -o-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%); 
   background:         linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%); 
-        
-/*
- background: -webkit-linear-gradient(90deg, #ECE9E6 10%, #FFFFFF 90%); 
-  background:    -moz-linear-gradient(90deg, #ECE9E6 10%, #FFFFFF 90%); 
-  background:     -ms-linear-gradient(90deg, #ECE9E6 10%, #FFFFFF 90%); 
-  background:      -o-linear-gradient(90deg, #ECE9E6 10%, #FFFFFF 90%); 
-  background:         linear-gradient(90deg, #ECE9E6 10%, #FFFFFF 90%); 
-  */      
+
+}
+
+#socialfeed{
+	font-family: 'Montserrat', sans-serif;;
+	background-color: rgb(171, 232, 245);
+	color: rgb(131, 164, 212);
+	margin-bottom: 22px;
+
 }
 
 .container-fluid{
@@ -57,26 +58,26 @@ body{
 
 }
 
+#title{
+	font-family: 'Lobster', cursive;
+	color: rgb(244, 247, 250);
+	font-size: 60px;
+	text-align: center;
+}
+
+
+
+
   	</style>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
   </head>  
   <body>  
-<!--
-<form action="/fetch" enctype="multipart/form-data" method="GET" id="form">  
-	<input type="text" name="text" id="text" />
-	<input type="submit" value="Submit text" />
-</form>
-
-<input type="submit" value="Find local Tweets" class="btn" id="twitter" />
-<input type="submit" value="Instagram's"  id="instagram" class="btn" />
-
-<input type="submit" value="Shuffle"  id="shuffle" class="btn" />
--->
-
-<center><input type="submit" value="Get social feed!"  id="socialfeed" class="btn" /></center>
 
 <div class="container-fluid">
+<h2 id="title">Nearby stuff</h2>
+<center><input type="submit" value="Start exploring!"  id="socialfeed" class="btn" /></center>
+
 <div id="tweets"></div>
 <div id="instagrams"></div>
 <div id="shuffled_content"></div>
@@ -86,51 +87,32 @@ body{
 
 
 	$(function(){
-		
-
-		function fixHeight() {
-		console.log("triggered onload");
-  		twitter_div = $(".twitter_div");
-  		instagram_img_div = $('.instagram_img_div');
-		var twitter_width = twitter_div.width();
-		twitter_div.css('height', twitter_width);
-		instagram_img_div.css('height', twitter_width);
-		console.log("twitter_width: ", twitter_width);
-};
-
+		j=0;
 		var updates = [];
 		var shuffles_updates = [];
 		twitter_ready = false;
 		instagram_ready = false;
 
-		$( window ).resize(function() {
-			var twitter_div = $(".twitter_div");
-			var instagram_img_div = $('.instagram_img_div');
+		function fixHeight() {
+			console.log("triggered onload");
+	  		twitter_div = $(".twitter_div");
+	  		instagram_img_div = $('.instagram_img_div');
 			var twitter_width = twitter_div.width();
 			twitter_div.css('height', twitter_width);
 			instagram_img_div.css('height', twitter_width);
 			console.log("twitter_width: ", twitter_width);
+		};
 
+
+		$( window ).resize(function() {
+			fixHeight();
 		});
 
 		$("#socialfeed").on('click', function(){
 			getInstagram();
-			get_tweets();
-
-
+			getTweets();
 		})
 		
-		$("#instagram").on('click', function(){
-			console.log("tapped instagram");
-			getInstagram();
-
-		});
-		$("#twitter").on('click', function(){
-			get_tweets();
-
-		});
-
-
 
 		function getInstagram(){
 			console.log("running getinstagram");
@@ -138,89 +120,74 @@ body{
   			lat = position.coords.latitude;
   			lon = position.coords.longitude;
 
-
 	 		$.ajax({url:'https://api.instagram.com/v1/media/search?lat=' +lat +'&lng=' + lon + '&access_token=38313696.8ac3169.2676a0eafcb447d391175e0cfec175e3',
                    dataType: 'jsonp',
                    success: function(response){
-                   instagram_updates = [];
-                   console.log("response:")
-                   console.log(response);
+                   instagram_updates = [];        
                    var length = response.data.length;
                    for (i=0;i<length;i++){
                    		instagram_updates.push('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></div>');
-							/*$("#instagrams").append('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></div>');*/
 					if (i === (length-1)){
 						instagram_ready = true;
 						console.log(instagram_ready, instagram_updates);
 						checkIfReady();
-					}
+						}
 
+						}
 					}
-				}
-			});
-		})
-	}
-
-		
+				});
+			})
+		}
 	
-		function get_tweets() {
+		function getTweets() {
 			console.log("geo_location triggered");	
 	  		navigator.geolocation.getCurrentPosition(function(position){
 	  			twitter_updates = [];
 	   			lat = position.coords.latitude;
-	  			lon = position.coords.longitude;
-	  			console.log("lat: " + position.coords.latitude);
-	  			console.log("lon: " + position.coords.longitude);	  
+	  			lon = position.coords.longitude;	  
 			    geocode = lat + "," + lon + "," + "1mi";
 				$.getJSON("http://localhost:3000/fetch?geocode=" + geocode, function(data) {
 					console.log(data)
 					var length = data.length;
 					var html = "";
 					for (var i=0;i<length;i++){
-						twitter_updates.push("<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div'><p class='twitter_text'>" +data[i].text + "</p></div>");
+						twitter_updates.push("<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div'><p class='twitter_text'>" + data[i].text + "</p></div>");
 						if (i === (length-1)){
 							twitter_ready = true;
-							console.log(twitter_ready, twitter_updates);
 							checkIfReady();
-
 						}
 					}
 				});
 
 			});
-
 		}
-
-
-
 
 
 				function checkIfReady(){
 					if (twitter_ready === true && instagram_ready === true){
 						console.log('all fetched!!');
-						mix_arrays();
+						mixArrays();
 						fixHeight();
 					}
 				}
-
+			
+				function renderUpdates(){
+					setTimeout(function(){
+						$('#shuffled_content').append(shuffled_updates[j]);
+						j++;
+						if (j < shuffled_updates.length){
+							fixHeight();
+							renderUpdates();
+						}
+					}, 
+					150);
+				}
 		
-				$("#shuffle").on('click', function(){
-					console.log("clicked shuffle");
-					mix_arrays();
-				});
-
-
-
-
-				function mix_arrays(){
-					console.log("running mix_arrays");
+				function mixArrays(){
 					updates = twitter_updates.concat(instagram_updates);
 					shuffled_updates = shuffle(updates);
-					console.log("Shuffled stuff:");
 					console.log(shuffled_updates);
-					shuffled_updates.map(function(update){
-						$("#shuffled_content").append(update);
-					});
+					renderUpdates(shuffled_updates);
 				}
 
 				function shuffle(array) {
@@ -238,60 +205,8 @@ body{
 				    array[currentIndex] = array[randomIndex];
 				    array[randomIndex] = temporaryValue;
 				  }
-
 				  return array;
 			}
-
-				/*data.map(function(tweet) {
-					html += "<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div'><p class='twitter_text'>" + tweet.text+ "</p></div>";
-				});
-				$( "#tweets" ).append( html );
-				  console.log( "tweets loaded: "+ data.length );
-			})*/
-
-		
-
-
-
-		
-
-  		
-		//var interval;
-/*
-		function fetch(term){
-			$.getJSON( "http://localhost:3000/fetch?text=" + term, function( data ) {
-				console.log(data)
-				var html = "";
-				data.map(function(tweet) {
-					html += "<p>"+ tweet.text+ "</p>";
-				})
-			  $( "#tweets" ).html( html );
-			  console.log( "tweets loaded: "+ data.length );
-			});
-		}
-		*/
-
-
-
-
-
-		$("#form").submit(function(e){
-			var i = 1;
-		    e.preventDefault();
-		    var form = this;
-		    var term = $("#text").val();
-		    fetch(term);
-		    
-		    /*
-  			clearInterval(interval);
-		    interval = setInterval(function(){
-		    	console.log(i++);
-		    	fetchMore(term);
-		    }, 10000);
-			*/
-
-		});
-
 		});
 
 </script>
