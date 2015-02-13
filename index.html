@@ -13,6 +13,58 @@
   	<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
   	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
   	<style>
+.loader {
+    text-align: center;    
+}
+.loader span {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    margin: 50px auto;
+    background: black;
+    border-radius: 50px;
+    -webkit-animation: loader 0.9s infinite alternate;
+    -moz-animation: loader 0.9s infinite alternate;
+}
+.loader span:nth-of-type(2) {
+    -webkit-animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+}
+.loader span:nth-of-type(3) {
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+}
+@-webkit-keyframes loader {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    width: 24px;
+    height: 24px;
+    opacity: 0.1;
+    -webkit-transform: translateY(-21px);
+  }
+}
+@-moz-keyframes loader {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    -moz-transform: translateY(0);
+  }
+  100% {
+    width: 24px;
+    height: 24px;
+    opacity: 0.1;
+    -moz-transform: translateY(-21px);
+  }
+}
+
+
 body{
 
   background: -webkit-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);  
@@ -25,9 +77,18 @@ body{
 
 #socialfeed{
 	font-family: 'Montserrat', sans-serif;;
-	background-color: rgb(171, 232, 245);
-	color: rgb(131, 164, 212);
+	background-color: rgb(139, 178, 219);
+	color: rgb(182, 251, 255);
 	margin-bottom: 22px;
+
+}
+
+#socialfeed:active{
+	font-family: 'Montserrat', sans-serif;;
+	background-color: rgb(139, 178, 219);
+	color: rgb(182, 251, 255);
+	margin-bottom: 22px;
+	  outline: none;
 
 }
 
@@ -64,7 +125,9 @@ body{
 	font-size: 60px;
 	text-align: center;
 }
-
+.loader{
+	display: none;
+}
 
 
 
@@ -76,10 +139,13 @@ body{
 
 <div class="container-fluid">
 <h2 id="title">Nearby stuff</h2>
-<center><input type="submit" value="Start exploring!"  id="socialfeed" class="btn" /></center>
+<center><button type="button" id="socialfeed" class="btn"/>Start exploring!</button></center>
 
-<div id="tweets"></div>
-<div id="instagrams"></div>
+<div class="loader">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 <div id="shuffled_content"></div>
 
 </div>
@@ -108,10 +174,26 @@ body{
 			fixHeight();
 		});
 
-		$("#socialfeed").on('click', function(){
+		$("#socialfeed").on('click', function(e){
+			e.stopImmediatePropagation();
+			$(this).removeClass('active');
 			getInstagram();
 			getTweets();
-		})
+			console.log('click');
+			$(".loader").css('display', 'block');
+		});
+
+
+		$("#socialfeed").hover(function(){
+			console.log('hovering');
+			$(this).css('color', 'white');
+		},
+
+		function(){
+			$(this).css('color', 'rgb(182, 251, 255)');
+		}
+		);
+		
 		
 
 		function getInstagram(){
@@ -133,10 +215,10 @@ body{
 						checkIfReady();
 						}
 
-						}
 					}
-				});
-			})
+				}
+			});
+		})
 		}
 	
 		function getTweets() {
@@ -158,16 +240,14 @@ body{
 						}
 					}
 				});
-
 			});
 		}
 
 
-				function checkIfReady(){
-					if (twitter_ready === true && instagram_ready === true){
-						console.log('all fetched!!');
-						mixArrays();
-						fixHeight();
+		function checkIfReady(){
+			if (twitter_ready === true && instagram_ready === true){
+				$(".loader").css('display', 'none');					console.log('all fetched!!');					mixArrays();						
+					fixHeight();
 					}
 				}
 			
@@ -175,8 +255,8 @@ body{
 					setTimeout(function(){
 						$('#shuffled_content').append(shuffled_updates[j]);
 						j++;
+						fixHeight();
 						if (j < shuffled_updates.length){
-							fixHeight();
 							renderUpdates();
 						}
 					}, 
