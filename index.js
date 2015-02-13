@@ -1,6 +1,7 @@
 var http = require('http');
 var twit = require('twitter');
-var  fs = require("fs");
+var st = require('node-static');
+var fs = require("fs");
 var index = fs.readFileSync("./index.html").toString();
 var ig = require('instagram-node').instagram();
 
@@ -20,9 +21,8 @@ ig.location_search({ lat:51.529457, lng: -0.0423818}, function(err, result, rema
 		console.log("Error");
 	}
 	else{
-		console.log("no error" + result);
-		console.log(result.length);
-		console.log(result);
+		console.dir(result);
+
 	}
 	//console.log(result);
 });
@@ -40,28 +40,23 @@ http.createServer(function (req, res) {
 } else {
 	var url_parts = url.parse(req.url, true);
 	var query = url_parts.query["text"];
-	console.log("query: ", query);
+	//console.dir(query);
 	var geocode = url_parts.query["geocode"];
-	var ig_geocode =rl_parts.query["ig_geocode"];
-	console.log(geocode);
+	//console.log(geocode);
 	if(query) {
 		  twitter.get('search/tweets', { count: 20, geocode: "40.759101,-73.984406,1mi"}, 
 		  function(error, tweets, response){
 		  res.writeHead(200, {'Content-Type': 'application/javascript'});
 		  res.end(JSON.stringify(tweets.statuses));
-	  // res.write(tweets);
 	});
 	
-
 	}else if (geocode) {
-		twitter.get('search/tweets', {count:20, geocode: geocode}, 
-			function(errpr,tweets,response){
+		twitter.get('search/tweets', {count:10, geocode: geocode}, 
+			function(error,tweets,response){
 				res.writeHead(200,  {'Content-Type': 'application/javascript'});
 				res.end(JSON.stringify(tweets.statuses));
+
 			});
-
-	}else if (ig_geocode){
-
 
 	}
 	 else {
