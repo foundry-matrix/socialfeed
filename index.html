@@ -1,4 +1,6 @@
+
 <html>
+
 	<head>
 <!-- Latest compiled and minified CSS -->
 
@@ -6,7 +8,10 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
+
+
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 
 	<link rel="icon" type="image/png"  href="http://iconhandbook.co.uk/favicon.ico">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -14,6 +19,7 @@
   	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
   	<style>
 .loader {
+
     text-align: center;
 }
 .loader span {
@@ -137,6 +143,7 @@ body{
   </head>
   <body>
 
+
 <div class="container-fluid">
 <h2 id="title">Nearby stuff</h2>
 <center><button type="button" id="socialfeed" class="btn"/>Start exploring!</button></center>
@@ -194,8 +201,6 @@ body{
 		}
 		);
 
-
-
 		function getInstagram(){
 			console.log("running getinstagram");
 			navigator.geolocation.getCurrentPosition(function(position){
@@ -206,7 +211,9 @@ body{
                    dataType: 'jsonp',
                    success: function(response){
                    	console.log(response);
+
                    instagram_updates = [];
+
                    var length = response.data.length;
                    for (i=0;i<length;i++){
                    		instagram_updates.push('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><a  target="_blank" href="' + response.data[i].link + '"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></a></div>');
@@ -231,6 +238,7 @@ body{
 			    geocode = lat + "," + lon + "," + "1mi";
 			  // OLD ADRESS: http://localhost:3000/fetch?geocode
 				$.getJSON("http://localhost:3000/fetch?geocode=" + geocode, function(data) {
+
 					console.log("Tweets:");
 					console.log(data);
 					var length = data.length;
@@ -249,10 +257,12 @@ body{
 
 		function checkIfReady(){
 			if (twitter_ready === true && instagram_ready === true){
+
 				$(".loader").css('display', 'none');					console.log('all fetched!!');					mixArrays();
 					fixHeight();
 					}
 				}
+
 
 				function renderUpdates(){
 					setTimeout(function(){
@@ -262,6 +272,7 @@ body{
 						if (j < shuffled_updates.length){
 							renderUpdates();
 						}
+
 					},
 					150);
 				}
@@ -293,6 +304,7 @@ body{
 		});
 
 </script>
+
 
  </form>
   </body>

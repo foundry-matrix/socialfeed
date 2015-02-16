@@ -5,6 +5,9 @@ var index = fs.readFileSync("./index.html").toString();
 var url = require('url');
 var keys= require('./keys.js')
 
+
+
+
 var twitter = new twit(keys.secretkeys);
 
 http.createServer(function (req, res) {
