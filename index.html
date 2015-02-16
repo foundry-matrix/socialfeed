@@ -1,0 +1,299 @@
+<html>
+	<head>
+<!-- Latest compiled and minified CSS -->
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link rel="icon" type="image/png"  href="http://iconhandbook.co.uk/favicon.ico">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  	<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+  	<style>
+.loader {
+    text-align: center;
+}
+.loader span {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    margin: 50px auto;
+    background: black;
+    border-radius: 50px;
+    -webkit-animation: loader 0.9s infinite alternate;
+    -moz-animation: loader 0.9s infinite alternate;
+}
+.loader span:nth-of-type(2) {
+    -webkit-animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+}
+.loader span:nth-of-type(3) {
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+}
+@-webkit-keyframes loader {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    width: 24px;
+    height: 24px;
+    opacity: 0.1;
+    -webkit-transform: translateY(-21px);
+  }
+}
+@-moz-keyframes loader {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    -moz-transform: translateY(0);
+  }
+  100% {
+    width: 24px;
+    height: 24px;
+    opacity: 0.1;
+    -moz-transform: translateY(-21px);
+  }
+}
+
+
+body{
+
+  background: -webkit-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);
+  background:    -moz-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);
+  background:     -ms-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);
+  background:      -o-linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);
+  background:         linear-gradient(90deg, #83a4d4 10%, #b6fbff 90%);
+
+}
+
+#socialfeed{
+	font-family: 'Montserrat', sans-serif;;
+	background-color: rgb(139, 178, 219);
+	color: rgb(182, 251, 255);
+	margin-bottom: 22px;
+
+}
+
+#socialfeed:active{
+	font-family: 'Montserrat', sans-serif;;
+	background-color: rgb(139, 178, 219);
+	color: rgb(182, 251, 255);
+	margin-bottom: 22px;
+	outline: none;
+
+}
+
+.container-fluid{
+	padding: 0px;
+
+}
+
+.instagram_img{
+	width: 100%;
+}
+
+.instagram_img_div{
+	padding:0px;
+}
+
+.twitter_div{
+	padding:0px;
+	background-color: #A2D8EE;
+
+}
+
+
+.twitter_text{
+	padding:30% 15% 0 15%;
+	font-family: 'Montserrat', sans-serif;;
+	color: white;
+
+}
+
+#title{
+	font-family: 'Lobster', cursive;
+	color: rgb(244, 247, 250);
+	font-size: 60px;
+	text-align: center;
+}
+.loader{
+	display: none;
+}
+
+
+
+  	</style>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  </head>
+  <body>
+
+<div class="container-fluid">
+<h2 id="title">Nearby stuff</h2>
+<center><button type="button" id="socialfeed" class="btn"/>Start exploring!</button></center>
+
+<div class="loader">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<div id="shuffled_content"></div>
+
+</div>
+<script>
+
+
+	$(function(){
+		j=0;
+		var updates = [];
+		var shuffles_updates = [];
+		twitter_ready = false;
+		instagram_ready = false;
+
+		function fixHeight() {
+			console.log("triggered onload");
+	  		twitter_div = $(".twitter_div");
+	  		instagram_img_div = $('.instagram_img_div');
+			var twitter_width = twitter_div.width();
+			twitter_div.css('height', twitter_width);
+			instagram_img_div.css('height', twitter_width);
+			console.log("twitter_width: ", twitter_width);
+		};
+
+
+		$( window ).resize(function() {
+			fixHeight();
+		});
+
+		$("#socialfeed").on('click', function(e){
+			e.stopImmediatePropagation();
+			$(this).removeClass('active');
+			getInstagram();
+			getTweets();
+			console.log('click');
+			$(".loader").css('display', 'block');
+		});
+
+
+		$("#socialfeed").hover(function(){
+			console.log('hovering');
+			$(this).css('color', 'white');
+		},
+
+		function(){
+			$(this).css('color', 'rgb(182, 251, 255)');
+		}
+		);
+
+
+
+		function getInstagram(){
+			console.log("running getinstagram");
+			navigator.geolocation.getCurrentPosition(function(position){
+  			lat = position.coords.latitude;
+  			lon = position.coords.longitude;
+
+	 		$.ajax({url:'https://api.instagram.com/v1/media/search?lat=' +lat +'&lng=' + lon + '&access_token=38313696.8ac3169.2676a0eafcb447d391175e0cfec175e3',
+                   dataType: 'jsonp',
+                   success: function(response){
+                   	console.log(response);
+                   instagram_updates = [];
+                   var length = response.data.length;
+                   for (i=0;i<length;i++){
+                   		instagram_updates.push('<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 instagram_img_div"><a  target="_blank" href="' + response.data[i].link + '"><img class="instagram_img" src="' + response.data[i].images.low_resolution.url + '"></a></div>');
+					if (i === (length-1)){
+						instagram_ready = true;
+						console.log(instagram_ready, instagram_updates);
+						checkIfReady();
+						}
+
+					}
+				}
+			});
+		})
+		}
+
+		function getTweets() {
+			console.log("geo_location triggered");
+	  		navigator.geolocation.getCurrentPosition(function(position){
+	  			twitter_updates = [];
+	   			lat = position.coords.latitude;
+	  			lon = position.coords.longitude;
+			    geocode = lat + "," + lon + "," + "1mi";
+			  // OLD ADRESS: http://localhost:3000/fetch?geocode
+				$.getJSON("http://localhost:3000/fetch?geocode=" + geocode, function(data) {
+					console.log("Tweets:");
+					console.log(data);
+					var length = data.length;
+					var html = "";
+					for (var i=0;i<length;i++){
+						twitter_updates.push('<a target="_blank" href="https://twitter.com/' + data[i].user.screen_name +'"><div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 twitter_div"><p class="twitter_text">'+ data[i].text + '</p></div></a>');
+						if (i === (length-1)){
+							twitter_ready = true;
+							checkIfReady();
+						}
+					}
+				});
+			});
+		}
+
+
+		function checkIfReady(){
+			if (twitter_ready === true && instagram_ready === true){
+				$(".loader").css('display', 'none');					console.log('all fetched!!');					mixArrays();
+					fixHeight();
+					}
+				}
+
+				function renderUpdates(){
+					setTimeout(function(){
+						$('#shuffled_content').append(shuffled_updates[j]);
+						j++;
+						fixHeight();
+						if (j < shuffled_updates.length){
+							renderUpdates();
+						}
+					},
+					150);
+				}
+
+				function mixArrays(){
+					updates = twitter_updates.concat(instagram_updates);
+					shuffled_updates = shuffle(updates);
+					console.log(shuffled_updates);
+					renderUpdates(shuffled_updates);
+				}
+
+				function shuffle(array) {
+				  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+				  // While there remain elements to shuffle...
+				  while (0 !== currentIndex) {
+
+				    // Pick a remaining element...
+				    randomIndex = Math.floor(Math.random() * currentIndex);
+				    currentIndex -= 1;
+
+				    // And swap it with the current element.
+				    temporaryValue = array[currentIndex];
+				    array[currentIndex] = array[randomIndex];
+				    array[randomIndex] = temporaryValue;
+				  }
+				  return array;
+			}
+		});
+
+</script>
+
+ </form>
+  </body>
+  </html>
