@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "twitter": "^1.2.1",
-    
-
+    "twitter": "^1.2.1"
   },
   "devDependencies": {},
   "scripts": {
