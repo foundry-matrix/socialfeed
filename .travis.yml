@@ -1,4 +1,9 @@
 language: node_js
+"scripts": {
+  "test": "./node_modules/tape/bin/tape"
+}
 deploy:
+  app:instagramfeed
   provider: heroku
-  api_key: 8a047ade-dc0a-49c4-845a-49ceba86f52c
+  api_key:
+    secure: ZZVEI8h6OPleNm+VZXEvHYXqGCmSFdEJ76iUrC8X2qFUT/aUagoIgPWRWLmWa4UIkOI59Tu7wn+LT8Xmwq34s9l8PlDt+3lKlSNiXjLyD3n4hiINBzq7ter2X3LA5UVfEImsyEu+HJCpJe+d9pJp2cDH6twwBwLXToJSZctBVj8=
