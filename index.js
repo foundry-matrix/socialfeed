@@ -16,6 +16,7 @@ http.createServer(function (req, res) {
     res.end(index);
 	} else {
 		var url_parts = url.parse(req.url, true);
+    console.log(url_parts)
 		var geocode = url_parts.query["geocode"];
 		} if (geocode) {
 			twitter.get('search/tweets', {count:10, geocode: geocode},

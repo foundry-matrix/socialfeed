@@ -1,6 +1,11 @@
 language: node_js
 
 deploy:
+  app: socialfeed2
   provider: heroku
   api_key:
     secure: ZZVEI8h6OPleNm+VZXEvHYXqGCmSFdEJ76iUrC8X2qFUT/aUagoIgPWRWLmWa4UIkOI59Tu7wn+LT8Xmwq34s9l8PlDt+3lKlSNiXjLyD3n4hiINBzq7ter2X3LA5UVfEImsyEu+HJCpJe+d9pJp2cDH6twwBwLXToJSZctBVj8=
+  on:
+    all_branches: true
+services:
+  - mongodb
